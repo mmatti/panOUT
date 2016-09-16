@@ -1,0 +1,75 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="utf-8")
+		title panOUT SHOUTcast Tuner
+		link(href="https://fonts.googleapis.com/icon?family=Material+Icons",rel="stylesheet")
+		link(href="./css/styles.css",rel="stylesheet")
+	body
+		audio#aud
+		header
+			#ban.disab
+				#cur panOUT SHOUTcast Tuner
+				div: i#fav.material-icons favorite_outline
+			i#ctl.material-icons.disab play_circle_outline
+		nav
+			ul
+				li(data-sct="dsc").sel Discover
+				li(data-sct="top") Top 200
+				li(data-sct="fvs") Favorites
+		#vol
+			#dec: span ▼
+			#lev: span 100%
+			#inc: span ▲
+		#rsp
+			#dsc.sel
+				ul
+					li(v-for="itm in pri",:data-gid="itm.id",:data-name="itm.name",@mouseenter="ovrPri",@mouseleave="outPri",@click="clkPri",transition="stagger",enter-stagger="40",leave-stagger="20")
+						div.nom {{{itm.name}}}
+						div.nfo
+							div: span.cnt {{itm.cnt}}
+				ul
+					li(v-for="itm in sec",v-show="itm.count",:data-pid="itm.parentid",:data-gid="itm.id",:data-name="itm.name",@mouseenter="ovrSec",@mouseleave="outSec",@click="clkSec",transition="stagger",enter-stagger="40",leave-stagger="20")
+						div.nom {{{itm.name}}}
+						div.nfo
+							div: span.cnt {{itm.cnt}}
+				ul
+					li(v-for="itm in sta",:data-gid="itm.gid",:data-sid="itm.id",:data-name="itm.name",:data-fvr="itm.fvr",:data-br="itm.br",@mouseenter="ovrSta",@mouseleave="outSta",@click="clkSta")
+						div.nom {{{itm.name}}}
+						div.nfo
+							div(v-if="itm.fvr")
+								i.material-icons favorite
+							div(v-if="itm.lc > 0")
+								span.cnt {{itm.cnt}}
+								i.material-icons hearing
+							div
+								span.cnt {{itm.br}}
+								i.material-icons wifi
+			#top
+				ul
+					li(v-for="itm in top",:data-sid="itm.id",:data-name="itm.name",:data-fav="itm.fvr",:data-br="itm.br",@mouseenter="ovrTop",@mouseleave="outTop",@click="clkTop")
+						div.nom
+							span.ndx {{$index+1}}&nbsp;
+							span.gnr {{{itm.genre}}}&nbsp;
+							span {{{itm.name}}}
+						div.nfo
+							div(v-if="itm.fvr")
+								i.material-icons favorite
+							div
+								span.cnt {{itm.lc}}
+								i.material-icons hearing
+							div
+								span.cnt {{itm.br}}
+								i.material-icons wifi
+			#fvs
+				ul
+					li(v-for="itm in fvs",:data-sid="itm.id",:data-name="itm.name",:data-br="itm.br",@mouseenter="ovrFvs",@mouseleave="outFvs",@click="clkFvs",transition="stagger",enter-stagger="40",leave-stagger="20")
+						div.nom {{{itm.name}}}
+						div.nfo
+							div
+								i(:data-sid="itm.id",@mouseenter="ovrFvrIcn",@mouseleave="outFvrIcn",@click="clkFvrIcn").material-icons favorite
+							div
+								span.cnt {{itm.br}}
+								i.material-icons wifi
+		script.
+			require('./js/scripts');

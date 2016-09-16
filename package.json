@@ -1,0 +1,21 @@
+{
+  "name": "panOUT",
+  "version": "0.0.1",
+  "description": "SHOUTcast Radio Tuner",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmatti/panOUT.git"
+  },
+  "main": "js/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^1.4.0",
+    "electron-packager": "^8.0.0",
+    "http-proxy": "^1.15.1",
+    "vue": "^1.0.26"
+  },
+  "dependencies": {}
+}
