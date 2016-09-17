@@ -68,9 +68,9 @@ header {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			will-change: transform;
-			transition: transform 0.4s linear;
+			transition: transform 0.2s linear;
 			&.chg{
-				transform:rotateX(180deg);
+				transform:rotateX(90deg);
 			}
 		}
 	}
