@@ -97,6 +97,7 @@ const wait = (tog) => {
 
 const fault = (msg) => {
 	ctl.textContent = 'error';
+	ctl.classList.remove('active');
 	ctl.classList.add('error');
 	ban.classList.add('error');
 	cur.textContent = msg;
@@ -334,16 +335,19 @@ aud.addEventListener('playing', () => {
 	fav.style.visibility = 'visible';
 	fav.textContent = cur.dataset.fvr != 0 ? 'favorite' : 'favorite_outline';
 	ctl.classList.remove('disab','error');
+	ctl.classList.add('active');
 	ban.classList.remove('disab','error');
 });
 aud.addEventListener('pause', () => {
 	ctl.textContent = 'play_circle_outline';
+	ctl.classList.remove('active');
 });
 aud.addEventListener('error', () => {
 	fault('stream error');
 });
 aud.addEventListener('ended', () => {
 	ctl.textContent = 'play_circle_outline';
+	ctl.classList.remove('active');
 	ban.classList.add('disab');
 });
 

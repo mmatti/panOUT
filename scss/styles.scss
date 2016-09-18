@@ -1,4 +1,8 @@
 @import 'https://fonts.googleapis.com/css?family=Varela+Round';
+@keyframes rotate {
+	0%{transform:rotate(0deg);}
+	100%{transform:rotate(360deg);}
+}
 
 body{
 	color:#111;
@@ -84,6 +88,20 @@ header {
 		transform:translateY(-50%);
 		text-shadow: 1px 1px 1px rgba(204, 204, 204, 0.3);
 		z-index:1;
+		&::before{
+			content:'';
+			position:absolute;
+			top: 0.5rem;
+			left: 0.5rem;
+			right: 0.5rem;
+			bottom: 0.5rem;
+			border-radius: 50%;
+			border:0.3rem solid transparent;
+			border-left-color:#fff;
+			border-right-color:#fff;
+			animation:rotate 2s infinite linear;
+			display:none;
+		}
 		&::after {
 			content: '';
 			background-color: #ddd;
@@ -94,6 +112,20 @@ header {
 			bottom: 0.3rem;
 			border-radius: 50%;
 			z-index: -1;
+		}
+		&:hover{
+			&::before{
+				border-left-color:#999;
+				border-right-color:#999;
+			}
+			&::after{
+				background-color:#fff;
+			}
+		}
+		&.active{
+			&::before{
+				display:block;
+			}
 		}
 		&.disab {
 			color: #ccc;
