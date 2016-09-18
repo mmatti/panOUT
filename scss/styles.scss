@@ -217,11 +217,10 @@ nav{
 
 #rsp {
 	position:absolute;
-	top:4rem;
+	top:3.85rem;
 	left:0.2rem;
 	right:0.2rem;
 	bottom:0.2rem;
-	overflow-y: scroll;
 	&.wait {
 		cursor: wait !important;
 		#dsc,#top,#fvs {
@@ -240,7 +239,8 @@ nav{
 		left:0;
 		right:0;
 		bottom:0;
-		transform:translateX(-100%);
+		overflow-y: scroll;
+		transform:translateX(-105%);
 		will-change: transform;
 		transition: transform 200ms ease-out;
 		&.sel{
@@ -256,7 +256,7 @@ nav{
 				list-style-type: none;
 				padding: 1px 0.4rem;
 				border-radius: 0.5rem;
-				margin: 0.2rem 0;
+				margin: 0.2rem 0 0 0;
 				display: flex;
 				align-items: center;
 				cursor: default;
@@ -326,7 +326,7 @@ nav{
 			}
 			&:nth-of-type(2) {
 				position: absolute;
-				top: 1.35rem;
+				top: 1.4rem;
 				left: 0;
 				right: 0;
 				bottom: 0;
@@ -348,7 +348,7 @@ nav{
 			}
 			&:nth-of-type(3) {
 				position: absolute;
-				top: 2.8rem;
+				top: 2.75rem;
 				left: 0;
 				right: 0;
 				bottom: 0;

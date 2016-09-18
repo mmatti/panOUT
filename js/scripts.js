@@ -80,8 +80,8 @@ xhrPri.onreadystatechange = function(){
 };
 
 const actTrg = (itm) => {
-	if(itm.parentNode.querySelector('li.act'))
-		itm.parentNode.querySelector('li.act').classList.remove('act');
+	let prv = document.querySelector('#rsp > div > ul > li.act');
+	if(prv)prv.classList.remove('act');
 	itm.classList.add('act');
 };
 
@@ -230,6 +230,7 @@ let vm = new Vue({
 		ovrFvs:(e) => {},
 		outFvs:(e) => {},
 		clkFvs:function(e){
+			actTrg(e.currentTarget);
 			stream({
 				id:e.currentTarget.dataset.sid,
 				nom:e.currentTarget.dataset.name,
