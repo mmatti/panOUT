@@ -25,17 +25,17 @@ html(lang="en")
 			#dsc.sel
 				ul
 					li(v-for="itm in pri",:data-gid="itm.id",:data-name="itm.name",@mouseenter="ovrPri",@mouseleave="outPri",@click="clkPri",transition="stagger",enter-stagger="40",leave-stagger="20")
-						div.nom {{{itm.name}}}
+						div.nom(v-html="itm.name")
 						div.nfo
 							div: span.cnt {{itm.cnt}}
 				ul
 					li(v-for="itm in sec",v-show="itm.count",:data-pid="itm.parentid",:data-gid="itm.id",:data-name="itm.name",@mouseenter="ovrSec",@mouseleave="outSec",@click="clkSec",transition="stagger",enter-stagger="40",leave-stagger="20")
-						div.nom {{{itm.name}}}
+						div.nom(v-html="itm.name")
 						div.nfo
 							div: span.cnt {{itm.cnt}}
 				ul
 					li(v-for="itm in sta",:data-gid="itm.gid",:data-sid="itm.id",:data-name="itm.name",:data-fvr="itm.fvr",:data-br="itm.br",@mouseenter="ovrSta",@mouseleave="outSta",@click="clkSta")
-						div.nom {{{itm.name}}}
+						div.nom(v-html="itm.name")
 						div.nfo
 							div(v-if="itm.fvr")
 								i.material-icons favorite
@@ -47,11 +47,12 @@ html(lang="en")
 								i.material-icons wifi
 			#top
 				ul
-					li(v-for="itm in top",:data-sid="itm.id",:data-name="itm.name",:data-fav="itm.fvr",:data-br="itm.br",@mouseenter="ovrTop",@mouseleave="outTop",@click="clkTop")
+					li(v-for="(itm,ndx) in top",:data-sid="itm.id",:data-name="itm.name",:data-fav="itm.fvr",:data-br="itm.br",@mouseenter="ovrTop",@mouseleave="outTop",@click="clkTop")
 						div.nom
-							span.ndx {{$index+1}}&nbsp;
-							span.gnr {{{itm.genre}}}&nbsp;
-							span {{{itm.name}}}
+							span.ndx {{ndx+1}}&nbsp;
+							span.gnr(v-html="itm.genre")
+							|&nbsp;
+							span(v-html="itm.name")
 						div.nfo
 							div(v-if="itm.fvr")
 								i.material-icons favorite
@@ -64,7 +65,7 @@ html(lang="en")
 			#fvs
 				ul
 					li(v-for="itm in fvs",:data-sid="itm.id",:data-name="itm.name",:data-br="itm.br",@mouseenter="ovrFvs",@mouseleave="outFvs",@click="clkFvs",transition="stagger",enter-stagger="40",leave-stagger="20")
-						div.nom {{{itm.name}}}
+						div.nom(v-html="itm.name")
 						div.nfo
 							div
 								i(:data-sid="itm.id",@mouseenter="ovrFvrIcn",@mouseleave="outFvrIcn",@click="clkFvrIcn").material-icons favorite

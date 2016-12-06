@@ -2,7 +2,7 @@
 const electron = require('electron');
 const {remote,ipcRenderer} = electron;
 const main = remote.require('./main.js');
-const Vue = require('vue');
+const Vue = require('vue/dist/vue.common');
 const aud = document.getElementById('aud');
 const ctl = document.getElementById('ctl');
 const ban = document.getElementById('ban');
@@ -11,13 +11,11 @@ const fav = document.getElementById('fav');
 const lev = document.getElementById('lev');
 const dec = document.getElementById('dec');
 const inc = document.getElementById('inc');
-const ds2 = document.querySelector('#dsc > ul:nth-of-type(2)');
-const ds3 = document.querySelector('#dsc > ul:nth-of-type(3)');
 const prv = main.prvState();
 const api = {
 	ndx:'http://api.shoutcast.com',
 	tun:'http://yp.shoutcast.com/sbin/tunein-station.xspf',
-	key:'9999999999999999'
+	key:'egpcWUoUiepVCYmJ'
 };
 
 let volint;
@@ -174,14 +172,14 @@ let vm = new Vue({
 		clkPri:function(e){
 			if(this.pri.length > 1) {
 				e.currentTarget.classList.add('sel');
-				ds2.classList.add('dsp');
+				document.querySelector('#dsc > ul:nth-of-type(2)').classList.add('dsp');
 				this.pri = [this.cache[0].find(gnr => gnr.id == e.currentTarget.dataset.gid)];
 					this.sec = this.cache[0].find(gnr => gnr.id == e.currentTarget.dataset.gid).genrelist.genre;
 					this.sta = [];
 			} else {
 				e.currentTarget.classList.remove('sel');
-				ds2.classList.remove('dsp');
-				ds3.classList.remove('dsp');
+				document.querySelector('#dsc > ul:nth-of-type(2)').classList.remove('dsp');
+				document.querySelector('#dsc > ul:nth-of-type(3)').classList.remove('dsp');
 				this.pri = this.cache[0];
 				this.sec = [];
 				this.sta = [];
@@ -192,7 +190,7 @@ let vm = new Vue({
 		clkSec:function(e){
 			if(this.sec.length > 1) {
 				e.currentTarget.classList.add('sel');
-				ds3.classList.add('dsp');
+				document.querySelector('#dsc > ul:nth-of-type(3)').classList.add('dsp');
 				this.sec = [this.cache[0].find(pri => pri.id == e.currentTarget.dataset.pid).genrelist.genre.find(sec => sec.id == e.currentTarget.dataset.gid)];
 				if (this.cache[e.currentTarget.dataset.gid]) {
 					this.sta = this.cache[e.currentTarget.dataset.gid];
@@ -208,7 +206,7 @@ let vm = new Vue({
 				}
 			} else {
 				e.currentTarget.classList.remove('sel');
-				ds3.classList.remove('dsp');
+				document.querySelector('#dsc > ul:nth-of-type(3)').classList.remove('dsp');
 				this.sec = this.cache[0].find(pri => pri.id == e.currentTarget.dataset.pid).genrelist.genre;
 				this.sta = [];
 			}
@@ -246,7 +244,7 @@ let vm = new Vue({
 		},
 		clkFvrIcn:function(e){
 			e.stopPropagation();
-			this.fvs.$remove(this.fvs.find(fv => fv.id == e.currentTarget.dataset.sid));
+			this.fvs = this.fvs.filter(fv => fv.id !== e.currentTarget.dataset.sid);
 			if(cur.dataset.sid == e.currentTarget.dataset.sid) {
 				cur.dataset.fvr = 0;
 				fav.textContent = 'favorite_outline';
@@ -384,7 +382,7 @@ fav.addEventListener('click', (e) => {
 	let fnd = vm.fvs.find(fv => fv.id == cur.dataset.sid);
 	let tfv = vm.top.findIndex(fv => fv.id == cur.dataset.sid);
 	if(fnd){
-		vm.fvs.$remove(fnd);
+		vm.fvs = vm.fvs.filter(fv => fv !== fnd);
 		if(tfv != -1){
 			vm.top[tfv].fvr = 0;
 		}
