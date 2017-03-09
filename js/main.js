@@ -80,19 +80,19 @@ if(process.platform === 'darwin'){
 		submenu:[
 			{role:'about'},
 			{type:'separator'},
-			{
-				label:'Preferences...',
-				accelerator:'CmdOrCtrl+,',
-				click(){
-					if(prefWin) {
-						prefWin.isVisible() ? prefWin.hide() : prefWin.show();
-					} else {
-						prefGen();
-						prefWin.show();
-					}
-				}
-			},
-			{type:'separator'},
+		//	{
+		//		label:'Preferences...',
+		//		accelerator:'CmdOrCtrl+,',
+		//		click(){
+		//			if(prefWin) {
+		//				prefWin.isVisible() ? prefWin.hide() : prefWin.show();
+		//			} else {
+		//				prefGen();
+		//				prefWin.show();
+		//			}
+		//		}
+		//	},
+		//	{type:'separator'},
 			{
 				role:'services',
 				submenu:[]
@@ -128,7 +128,7 @@ if(process.platform === 'darwin'){
 		}
 	];
 }
-
+/*
 let prefGen = () => {
 	prefWin = new BrowserWindow({
 		width:400,
@@ -140,9 +140,9 @@ let prefGen = () => {
 		prefWin = null;
 	});
 };
-
+*/
 let setup = () => {
-	prefGen();
+//	prefGen();
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 	let prevState = state.get('prevState');
 	if(prevState === null){
