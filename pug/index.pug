@@ -23,17 +23,17 @@ html(lang="en")
 			#inc: span ▲
 		#rsp
 			#dsc.sel
-				ul
+				ul.pri
 					li(v-for="itm in pri",:data-gid="itm.id",:data-name="itm.name",@mouseenter="ovrPri",@mouseleave="outPri",@click="clkPri",transition="stagger",enter-stagger="40",leave-stagger="20")
 						div.nom(v-html="itm.name")
 						div.nfo
 							div: span.cnt {{itm.cnt}}
-				ul
+				ul.sec
 					li(v-for="itm in sec",v-show="itm.count",:data-pid="itm.parentid",:data-gid="itm.id",:data-name="itm.name",@mouseenter="ovrSec",@mouseleave="outSec",@click="clkSec",transition="stagger",enter-stagger="40",leave-stagger="20")
 						div.nom(v-html="itm.name")
 						div.nfo
 							div: span.cnt {{itm.cnt}}
-				ul
+				ul.sta
 					li(v-for="itm in sta",:data-gid="itm.gid",:data-sid="itm.id",:data-name="itm.name",:data-fvr="itm.fvr",:data-br="itm.br",@mouseenter="ovrSta",@mouseleave="outSta",@click="clkSta")
 						div.nom(v-html="itm.name")
 						div.nfo
@@ -47,7 +47,7 @@ html(lang="en")
 								i.material-icons wifi
 			#top
 				ul
-					li(v-for="(itm,ndx) in top",:data-sid="itm.id",:data-name="itm.name",:data-fav="itm.fvr",:data-br="itm.br",@mouseenter="ovrTop",@mouseleave="outTop",@click="clkTop")
+					li(v-for="(itm,ndx) in top",:data-sid="itm.id",:data-name="itm.name",:data-fvr="itm.fvr",:data-br="itm.br",@mouseenter="ovrSta",@mouseleave="outSta",@click="clkSta")
 						div.nom
 							span.ndx {{ndx+1}}&nbsp;
 							span.gnr(v-html="itm.genre")
@@ -64,7 +64,7 @@ html(lang="en")
 								i.material-icons wifi
 			#fvs
 				ul
-					li(v-for="itm in fvs",:data-sid="itm.id",:data-name="itm.name",:data-br="itm.br",@mouseenter="ovrFvs",@mouseleave="outFvs",@click="clkFvs",transition="stagger",enter-stagger="40",leave-stagger="20")
+					li(v-for="itm in fvs",:data-sid="itm.id",:data-name="itm.name",:data-fvr="1",:data-br="itm.br",@mouseenter="ovrSta",@mouseleave="outSta",@click="clkSta",transition="stagger",enter-stagger="40",leave-stagger="20")
 						div.nom(v-html="itm.name")
 						div.nfo
 							div
@@ -72,5 +72,6 @@ html(lang="en")
 							div
 								span.cnt {{itm.br}}
 								i.material-icons wifi
+		img#ldr(src='./img/rolling.gif')
 		script.
 			require('./js/scripts');

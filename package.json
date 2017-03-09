@@ -1,6 +1,6 @@
 {
   "name": "panOUT",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "SHOUTcast Radio Tuner",
   "license": "MIT",
   "repository": {
@@ -13,8 +13,6 @@
   },
   "devDependencies": {
     "electron": "^1.4.10",
-    "electron-packager": "^8.0.0",
-    "http-proxy": "^1.16.0",
     "vue": "^2.1.4"
   },
   "dependencies": {}

@@ -1,6 +1,5 @@
 const electron = require('electron');
 const {app,ipcMain,BrowserWindow,Menu} = electron;
-const httpProxy = require('http-proxy');
 const state = require('./state');
 const prev = {
 	ux:{
@@ -196,9 +195,6 @@ ipcMain.on('state', (evt,arg) => {
 		prev.ux[key] = arg[key];
 	});
 });
-
-httpProxy.createProxyServer({target:'http://api.shoutcast.com'}).listen(49152);
-httpProxy.createProxyServer({target:'http://yp.shoutcast.com'}).listen(49153);
 
 exports.subWindow = () => {
 	let sub = new BrowserWindow({

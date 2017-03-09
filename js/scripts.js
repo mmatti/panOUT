@@ -2,7 +2,7 @@
 const electron = require('electron');
 const {remote,ipcRenderer} = electron;
 const main = remote.require('./main.js');
-const Vue = require('vue/dist/vue.common');
+const Vue = require('vue/dist/vue.min');
 const aud = document.getElementById('aud');
 const ctl = document.getElementById('ctl');
 const ban = document.getElementById('ban');
@@ -123,21 +123,11 @@ let vm = new Vue({
 					id:sta.getAttribute('id'),
 					lc:cma(sta.getAttribute('lc')),
 					br:sta.getAttribute('br'),
-					fvr:this.fvs.some(fv => fv.id == sta.getAttribute('id'))
+					fvr:this.fvs.some(fv => fv.id == sta.getAttribute('id')) ? 1 : 0
 				});
 			});
 			this.top = arr;
-		},
-		ovrTop:(e) => {},
-		outTop:(e) => {},
-		clkTop:function(e){
-			actTrg(e.currentTarget);
-			stream({
-				id:e.currentTarget.dataset.sid,
-				nom:e.currentTarget.dataset.name,
-				fvr:e.currentTarget.dataset.fvr,
-				br:e.currentTarget.dataset.br
-			});
+			document.getElementById('ldr').classList.remove('act');
 		},
 		updPri:function(arr){
 			arr.forEach((pri) => {
@@ -166,16 +156,17 @@ let vm = new Vue({
 			}
 			this.pri = arr;
 			this.cache[0] = arr;
+			document.getElementById('ldr').classList.remove('act');
 		},
 		ovrPri:(e) => {},
 		outPri:(e) => {},
 		clkPri:function(e){
 			if(this.pri.length > 1) {
-				e.currentTarget.classList.add('sel');
 				document.querySelector('#dsc > ul:nth-of-type(2)').classList.add('dsp');
 				this.pri = [this.cache[0].find(gnr => gnr.id == e.currentTarget.dataset.gid)];
-					this.sec = this.cache[0].find(gnr => gnr.id == e.currentTarget.dataset.gid).genrelist.genre;
-					this.sta = [];
+				this.sec = this.cache[0].find(gnr => gnr.id == e.currentTarget.dataset.gid).genrelist.genre;
+				this.sta = [];
+				document.querySelector('#dsc > ul:nth-of-type(1) > li:first-of-type').classList.add('sel');
 			} else {
 				e.currentTarget.classList.remove('sel');
 				document.querySelector('#dsc > ul:nth-of-type(2)').classList.remove('dsp');
@@ -189,12 +180,12 @@ let vm = new Vue({
 		outSec:(e) => {},
 		clkSec:function(e){
 			if(this.sec.length > 1) {
-				e.currentTarget.classList.add('sel');
 				document.querySelector('#dsc > ul:nth-of-type(3)').classList.add('dsp');
 				this.sec = [this.cache[0].find(pri => pri.id == e.currentTarget.dataset.pid).genrelist.genre.find(sec => sec.id == e.currentTarget.dataset.gid)];
 				if (this.cache[e.currentTarget.dataset.gid]) {
 					this.sta = this.cache[e.currentTarget.dataset.gid];
 				} else {
+					document.getElementById('ldr').classList.add('act');
 					let ctx = {scp: this, pid: e.currentTarget.dataset.pid, gid: e.currentTarget.dataset.gid};
 					xhrSecUpd(ctx);
 					if(ctx.gid > 9989) {
@@ -204,6 +195,7 @@ let vm = new Vue({
 					}
 					xhrSec.send();
 				}
+				document.querySelector('#dsc > ul:nth-of-type(2) > li:first-of-type').classList.add('sel');
 			} else {
 				e.currentTarget.classList.remove('sel');
 				document.querySelector('#dsc > ul:nth-of-type(3)').classList.remove('dsp');
@@ -218,23 +210,12 @@ let vm = new Vue({
 			stream({
 				id:e.currentTarget.dataset.sid,
 				nom:e.currentTarget.dataset.name,
-				fvr:e.currentTarget.dataset.fvr,
+				fvr:parseInt(e.currentTarget.dataset.fvr),
 				br:e.currentTarget.dataset.br
 			});
 		},
 		updFvs:function(arr){
 			this.fvs = arr;
-		},
-		ovrFvs:(e) => {},
-		outFvs:(e) => {},
-		clkFvs:function(e){
-			actTrg(e.currentTarget);
-			stream({
-				id:e.currentTarget.dataset.sid,
-				nom:e.currentTarget.dataset.name,
-				fvr:1,
-				br:e.currentTarget.dataset.br
-			});
 		},
 		ovrFvrIcn:(e) => {
 			e.currentTarget.textContent = 'favorite_outline';
@@ -244,7 +225,7 @@ let vm = new Vue({
 		},
 		clkFvrIcn:function(e){
 			e.stopPropagation();
-			this.fvs = this.fvs.filter(fv => fv.id !== e.currentTarget.dataset.sid);
+			this.fvs = this.fvs.filter(fv => fv.id != e.currentTarget.dataset.sid);
 			if(cur.dataset.sid == e.currentTarget.dataset.sid) {
 				cur.dataset.fvr = 0;
 				fav.textContent = 'favorite_outline';
@@ -253,9 +234,10 @@ let vm = new Vue({
 		}
 	},
 	created:function(){
+		document.getElementById('ldr').classList.add('act');
 		xhrPri.open('GET',`${api.ndx}/genre/secondary?parentid=0&k=${api.key}&f=json`);
 		xhrPri.send();
-		aud.volume = prv.vol !== undefined ? prv.vol : 0.85;
+		aud.volume = prv.vol != undefined ? prv.vol : 0.85;
 		voldrw();
 		this.updFvs(prv.fvs);
 	}
@@ -268,17 +250,19 @@ const xhrSecUpd = (ctx) => {
 		if (this.readyState == 4 && this.status == 200) {
 			let lst = JSON.parse(this.responseText).response.data.stationlist;
 			if(lst.station){
-				if(lst.station.constructor === Array){
+				if(lst.station.constructor == Array){
 					lst.station.forEach((sta) => {
 						sta.gid = ctx.gid;
-						sta.name = sta.name.replace(/http:\/\//gi,'').replace(/\//g,' ❘ ');
+						if(sta.name.length) {
+							sta.name = sta.name.replace(/http:\/\//gi, '').replace(/\//g, ' ❘ ');
+						}
 						sta.fvr = ctx.scp.fvs.some(fv => fv.id == sta.id) ? 1 : 0;
 						sta.cnt = cma(sta.lc);
 					});
 					ctx.scp.cache[ctx.gid] = ctx.gid < 9990 ? lst.station.sort(keySrt('name')) : lst.station;
 				} else {
 					lst.station.gid = ctx.gid;
-					lst.station.name = lst.station.name.replace(/http:\/\//gi,'').replace('/',' ❘ ');
+					lst.station.name = lst.station.name.replace(/http:\/\//gi, '').replace('/', ' ❘ ');
 					lst.station.fvr = ctx.scp.fvs.some(fv => fv.id == lst.station.id) ? 1 : 0;
 					lst.station.cnt = cma(lst.station.lc);
 					ctx.scp.cache[ctx.gid] = [lst.station];
@@ -287,6 +271,7 @@ const xhrSecUpd = (ctx) => {
 				ctx.scp.cache[ctx.gid] = [];
 			}
 			ctx.scp.sta = ctx.scp.cache[ctx.gid];
+			document.getElementById('ldr').classList.remove('act');
 			wait(false);
 		}
 	};
@@ -300,15 +285,16 @@ const stream = (prm) => {
 			aud.pause();
 			if(this.status == 200){
 				if (this.responseXML != null) {
-					if (this.responseXML.querySelector('trackList>track>location')) {
+					if (this.responseXML.querySelector('trackList > track > location')) {
 						aud.removeAttribute('src');
-						aud.setAttribute('src', this.responseXML.querySelector('trackList>track>location').textContent.concat('/;'));
+						aud.setAttribute('src', this.responseXML.querySelector('trackList > track > location')
+							.textContent.concat('/;'));
 						aud.play();
 						curChg(prm.nom);
 						cur.dataset.sid = prm.id;
 						cur.dataset.br = prm.br;
-						cur.dataset.fvr = prm.fvr;
-						fav.textContent = prm.fvr != 0 ? 'favorite' : 'favorite_outline';
+						cur.dataset.fvr = prm.fvr ? 1 : 0;
+						fav.textContent = prm.fvr ? 'favorite' : 'favorite_outline';
 					} else {
 						fault('no track list');
 					}
@@ -324,7 +310,7 @@ const stream = (prm) => {
 			}
 		}
 	};
-	xhrSta.open('GET', `${api.tun}?id=${prm.id}`);
+	xhrSta.open('GET',`${api.tun}?id=${prm.id}`);
 	xhrSta.send();
 };
 
@@ -332,7 +318,6 @@ aud.addEventListener('playing', () => {
 	wait(false);
 	ctl.textContent = 'pause_circle_outline';
 	fav.style.visibility = 'visible';
-	fav.textContent = cur.dataset.fvr != 0 ? 'favorite' : 'favorite_outline';
 	ctl.classList.remove('disab','error');
 	ctl.classList.add('active');
 	ban.classList.remove('disab','error');
@@ -373,20 +358,20 @@ ctl.addEventListener('click', () => {
 });
 
 fav.addEventListener('mouseenter', (e) => {
-	e.currentTarget.textContent = cur.dataset.fvr != 0 ? 'favorite_border' : 'favorite';
+	e.currentTarget.textContent = parseInt(cur.dataset.fvr) ? 'favorite_border' : 'favorite';
 });
 fav.addEventListener('mouseleave', (e) => {
-	e.currentTarget.textContent = cur.dataset.fvr != 0 ? 'favorite' : 'favorite_border';
+	e.currentTarget.textContent = parseInt(cur.dataset.fvr) ? 'favorite' : 'favorite_border';
 });
 fav.addEventListener('click', (e) => {
 	let fnd = vm.fvs.find(fv => fv.id == cur.dataset.sid);
 	let tfv = vm.top.findIndex(fv => fv.id == cur.dataset.sid);
 	if(fnd){
-		vm.fvs = vm.fvs.filter(fv => fv !== fnd);
+		vm.fvs = vm.fvs.filter(fv => fv != fnd);
 		if(tfv != -1){
 			vm.top[tfv].fvr = 0;
 		}
-		for(var key in vm.cache){
+		for(let key in vm.cache){
 			let sfv = vm.cache[key].findIndex(sta => sta.id == cur.dataset.sid);
 			if(sfv != -1){
 				vm.cache[key][sfv].fvr = 0;
@@ -394,7 +379,6 @@ fav.addEventListener('click', (e) => {
 			}
 		}
 		cur.dataset.fvr = 0;
-		e.currentTarget.textContent = 'favorite_border';
 	} else {
 		vm.fvs.push({
 			id:cur.dataset.sid,
@@ -405,7 +389,7 @@ fav.addEventListener('click', (e) => {
 		if(tfv != -1) {
 			vm.top[tfv].fvr = 1;
 		}
-		for(var key in vm.cache){
+		for(let key in vm.cache){
 			let sfv = vm.cache[key].findIndex(sta => sta.id == cur.dataset.sid);
 			if(sfv != -1){
 				vm.cache[key][sfv].fvr = 1;
@@ -413,7 +397,6 @@ fav.addEventListener('click', (e) => {
 			}
 		}
 		cur.dataset.fvr = 1;
-		e.currentTarget.textContent = 'favorite';
 	}
 	ipcUpd({fvs:vm.fvs});
 });
@@ -437,6 +420,7 @@ fav.addEventListener('click', (e) => {
 			document.getElementById(e.currentTarget.dataset.sct).classList.add('sel');
 			if(e.currentTarget.dataset.sct == 'top'){
 				if(!vm.top.length){
+					document.getElementById('ldr').classList.add('act');
 					xhrTop.open('GET',`${api.ndx}/legacy/Top500?k=${api.key}&limit=200`);
 					xhrTop.send();
 				}
