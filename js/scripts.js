@@ -15,7 +15,7 @@ const prv = main.prvState();
 const api = {
 	ndx:'http://api.shoutcast.com',
 	tun:'http://yp.shoutcast.com/sbin/tunein-station.xspf',
-	key:'egpcWUoUiepVCYmJ'
+	key:'9999999999999999'
 };
 
 let volint;
